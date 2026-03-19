@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canadian Political Alignment Quiz</title>
+<meta name="description" content="Discover which federal party platform best matches your values. Non-partisan. No data collected.">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f4f2;
+    --surface: #ffffff;
+    --surface-2: #f0eeeb;
+    --border: #d8d4ce;
+    --text: #1c1a18;
+    --text-muted: #6b6560;
+    --text-subtle: #9b948d;
+    --accent: #3d5a80;
+    --accent-hover: #2e4461;
+    --accent-light: #e8eef5;
+    --lpc: #D71920;
+    --cpc: #1A4782;
+    --ndp: #E87722;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  .app {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── Header ─── */
+  .site-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 0 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+  .maple-leaf { font-size: 22px; }
+  .site-title { font-size: 14px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.04em; text-transform: uppercase; }
+
+  /* ─── Cards ─── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 36px 40px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  @media (max-width: 540px) { .card { padding: 24px 20px; } }
+
+  /* ─── Screens ─── */
+  .screen { display: none; flex-direction: column; gap: 24px; animation: fadeIn 0.3s ease; }
+  .screen.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ─── Welcome ─── */
+  .welcome-eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-subtle); margin-bottom: 8px;
+  }
+  .welcome-title {
+    font-size: clamp(26px, 5vw, 36px); font-weight: 700;
+    color: var(--text); line-height: 1.2; margin-bottom: 16px;
+  }
+  .welcome-subtitle {
+    font-size: 16px; color: var(--text-muted); line-height: 1.7;
+    border-left: 3px solid var(--border); padding-left: 16px;
+  }
+
+  .info-pills {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;
+  }
+  .pill {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 13px; color: var(--text-muted);
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 14px; font-weight: 600; color: var(--text); }
+  .form-group select, .form-group input {
+    padding: 10px 14px; border: 1.5px solid var(--border);
+    border-radius: var(--radius); font-size: 15px; color: var(--text);
+    background: var(--surface); outline: none; transition: border-color 0.15s;
+    appearance: none; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6560' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+    padding-right: 36px;
+  }
+  .form-group select:focus, .form-group input:focus { border-color: var(--accent); }
+
+  .form-hint { font-size: 13px; color: var(--text-subtle); }
+
+  /* ─── Buttons ─── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 28px; border-radius: var(--radius); font-size: 16px;
+    font-weight: 600; cursor: pointer; border: none; transition: all 0.15s;
+    text-decoration: none; white-space: nowrap; min-height: 48px;
+  }
+  .btn-primary {
+    background: var(--accent); color: white;
+  }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(61,90,128,0.25); }
+  .btn-secondary {
+    background: var(--surface-2); color: var(--text);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-ghost {
+    background: transparent; color: var(--text-muted);
+    border: 1.5px solid transparent; padding: 10px 16px;
+  }
+  .btn-ghost:hover { color: var(--text); background: var(--surface-2); }
+  .btn-sm { padding: 8px 16px; font-size: 14px; min-height: 36px; }
+  .btn-full { width: 100%; }
+
+  /* ─── Progress ─── */
+  .progress-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+  }
+  .progress-label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+  .progress-count { font-size: 13px; color: var(--text-subtle); }
+  .progress-track {
+    height: 5px; background: var(--surface-2); border-radius: 3px;
+    overflow: hidden; border: 1px solid var(--border);
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent); border-radius: 3px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ─── Domain badge ─── */
+  .domain-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent-light); color: var(--accent);
+    border-radius: 6px; padding: 4px 10px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ─── Question ─── */
+  .question-statement {
+    font-size: clamp(17px, 3vw, 21px); font-weight: 600;
+    line-height: 1.4; color: var(--text); margin: 12px 0 8px;
+  }
+  .reverse-note {
+    font-size: 12px; color: var(--text-subtle);
+    display: flex; align-items: center; gap: 4px;
+  }
+
+  /* ─── Likert scale ─── */
+  .likert-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 6px; margin-top: 20px;
+  }
+  @media (max-width: 480px) {
+    .likert-grid { grid-template-columns: 1fr; gap: 8px; }
+    .likert-option { flex-direction: row; justify-content: flex-start; gap: 12px; }
+    .likert-option .circle { width: 22px; height: 22px; flex-shrink: 0; }
+    .likert-label { font-size: 14px; text-align: left; }
+  }
+  .likert-option {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    cursor: pointer; padding: 10px 4px;
+    border-radius: var(--radius); border: 1.5px solid transparent;
+    transition: all 0.15s; background: var(--surface-2);
+    position: relative;
+  }
+  .likert-option:hover { border-color: var(--accent); background: var(--accent-light); }
+  .likert-option.selected { border-color: var(--accent); background: var(--accent-light); }
+  .likert-option input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .circle {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid var(--border); background: var(--surface);
+    transition: all 0.15s; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .likert-option.selected .circle {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .circle::after {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: white; opacity: 0; transition: opacity 0.15s;
+  }
+  .likert-option.selected .circle::after { opacity: 1; }
+  .likert-label { font-size: 12px; text-align: center; color: var(--text-muted); line-height: 1.3; font-weight: 500; }
+  .likert-option.selected .likert-label { color: var(--accent); font-weight: 600; }
+
+  /* Importance row */
+  .importance-row {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 10px 14px; background: var(--surface-2); border-radius: var(--radius);
+    border: 1px solid var(--border); margin-top: 12px;
+  }
+  .importance-label { font-size: 13px; color: var(--text-muted); font-weight: 500; flex-shrink: 0; }
+  .imp-opts { display: flex; gap: 6px; }
+  .imp-btn {
+    padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1.5px solid var(--border); background: var(--surface);
+    color: var(--text-muted); transition: all 0.12s;
+  }
+  .imp-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  /* Nav row */
+  .quiz-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px; margin-top: 8px;
+  }
+  .nav-left, .nav-right { display: flex; gap: 8px; }
+
+  /* ─── Results ─── */
+  .results-header { margin-bottom: 4px; }
+  .results-title { font-size: clamp(22px, 4vw, 30px); font-weight: 700; margin-bottom: 6px; }
+  .results-sub { font-size: 15px; color: var(--text-muted); }
+
+  .match-callout {
+    background: var(--accent-light); border: 1.5px solid #c5d5e8;
+    border-radius: var(--radius); padding: 16px 20px;
+    font-size: 15px; color: var(--accent);
+    display: none;
+  }
+  .match-callout.show { display: block; }
+
+  /* Overall bars */
+  .party-results { display: flex; flex-direction: column; gap: 14px; }
+  .party-bar-row { display: flex; flex-direction: column; gap: 6px; }
+  .party-bar-header {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .party-name-chip {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 600;
+  }
+  .party-dot {
+    width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+  }
+  .party-pct { font-size: 18px; font-weight: 700; }
+  .bar-track {
+    height: 22px; background: var(--surface-2); border-radius: 6px;
+    overflow: hidden; border: 1px solid var(--border);
+  }
+  .bar-fill {
+    height: 100%; border-radius: 6px;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+
+  /* Domain breakdown */
+  .domain-section { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .domain-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 18px; cursor: pointer; background: var(--surface);
+    transition: background 0.12s; user-select: none;
+  }
+  .domain-header:hover { background: var(--surface-2); }
+  .domain-title { font-size: 14px; font-weight: 600; }
+  .domain-leader { font-size: 13px; color: var(--text-muted); }
+  .domain-toggle { font-size: 18px; color: var(--text-subtle); transition: transform 0.2s; }
+  .domain-section.open .domain-toggle { transform: rotate(180deg); }
+  .domain-body {
+    display: none; padding: 16px 18px; background: var(--surface-2);
+    border-top: 1px solid var(--border); flex-direction: column; gap: 10px;
+  }
+  .domain-section.open .domain-body { display: flex; }
+  .mini-bar-row { display: flex; align-items: center; gap: 10px; }
+  .mini-bar-name { font-size: 13px; font-weight: 600; width: 80px; flex-shrink: 0; }
+  .mini-bar-track { flex: 1; height: 14px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .mini-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; width: 0%; }
+  .mini-bar-pct { font-size: 12px; color: var(--text-muted); width: 34px; text-align: right; flex-shrink: 0; }
+
+  /* Party summaries */
+  .party-summary-card {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 20px;
+    border-left: 4px solid var(--border);
+  }
+  .party-summary-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .party-summary-name { font-size: 15px; font-weight: 700; }
+  .party-summary-leader { font-size: 13px; color: var(--text-subtle); }
+  .party-summary-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+  /* Disclaimer */
+  .disclaimer {
+    font-size: 13px; color: var(--text-subtle); line-height: 1.6;
+    padding: 14px 18px; background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: var(--radius);
+  }
+
+  /* Section headings */
+  .section-heading {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-subtle); margin-bottom: 2px;
+  }
+
+  /* Share row */
+  .share-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* Divider */
+  hr { border: none; border-top: 1px solid var(--border); }
+
+  /* Footer */
+  .site-footer {
+    margin-top: auto; padding: 24px 0 16px;
+    text-align: center; font-size: 12px; color: var(--text-subtle);
+  }
+
+  /* Utility */
+  .text-muted { color: var(--text-muted); }
+  .gap-sm { gap: 8px; }
+
+  /* Focus ring for accessibility */
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+  /* Mode toggle */
+  .mode-toggle {
+    display: flex; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 3px; gap: 2px;
+  }
+  .mode-btn {
+    flex: 1; padding: 8px 12px; border-radius: 6px; border: none;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    background: transparent; color: var(--text-muted); transition: all 0.15s;
+  }
+  .mode-btn.active { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: var(--shadow-sm); }
+
+  /* Question by question vs domain groups */
+  .domain-group-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--border); margin-bottom: 16px;
+  }
+  .domain-group-icon { font-size: 18px; }
+  .domain-group-name { font-size: 18px; font-weight: 700; }
+  .domain-group-count { font-size: 13px; color: var(--text-subtle); }
+
+  @media (max-width: 540px) {
+    .quiz-nav { flex-direction: column-reverse; }
+    .nav-left, .nav-right { width: 100%; justify-content: stretch; }
+    .nav-left .btn, .nav-right .btn { flex: 1; }
+    .share-row { flex-direction: column; }
+    .share-row .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="site-header">
+    <span class="maple-leaf" aria-hidden="true">🍁</span>
+    <span class="site-title">Canadian Political Alignment Quiz</span>
+  </header>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!--  SCREEN 1: WELCOME                            -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div id="screen-welcome" class="screen active" role="main">
+    <div class="card">
+      <p class="welcome-eyebrow">2025 Federal Election</p>
+      <h1 class="welcome-title">Which federal party<br>best matches your values?</h1>
+      <p class="welcome-subtitle">Answer questions about your policy preferences. We'll show how your views compare to the platforms of Canada's federal parties. No personal data is collected — everything stays in your browser.</p>
+
+      <div class="info-pills" style="margin-top:16px;">
+        <span class="pill">🕐 ~5 minutes</span>
+        <span class="pill">📋 25 questions</span>
+        <span class="pill">🔒 No data collected</span>
+        <span class="pill">⚖️ Non-partisan</span>
+      </div>
+    </div>
+
+    <div class="card" style="gap:20px; display:flex; flex-direction:column;">
+      <div class="form-group">
+        <label for="current-pref">Which party do you currently support or lean toward? <span style="font-weight:400;color:var(--text-subtle)">(optional)</span></label>
+        <select id="current-pref">
+          <option value="">Prefer not to say / Undecided</option>
+          <option value="LPC">Liberal Party of Canada</option>
+          <option value="CPC">Conservative Party of Canada</option>
+          <option value="NDP">New Democratic Party</option>
+        </select>
+        <span class="form-hint">Used only at the end to compare your stated preference with your results. Does not influence scoring.</span>
+      </div>
+
+      <div class="form-group">
+        <label>Quiz mode</label>
+        <div class="mode-toggle" role="group" aria-label="Quiz mode">
+          <button class="mode-btn active" id="mode-one" onclick="setMode('one')">One at a time</button>
+          <button class="mode-btn" id="mode-group" onclick="setMode('group')">By topic</button>
+        </div>
+        <span class="form-hint">Both modes cover the same questions. "By topic" groups them by policy domain.</span>
+      </div>
+
+      <button class="btn btn-primary" onclick="startQuiz()" style="margin-top:4px;" aria-label="Start the quiz">
+        Start Quiz →
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!--  SCREEN 2: QUIZ                               -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div id="screen-quiz" class="screen" role="main" aria-live="polite">
+    <div class="card" style="gap:0;">
+      <div>
+        <div class="progress-header">
+          <span class="progress-label" id="q-domain-label"></span>
+          <span class="progress-count" id="q-count-label"></span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="Quiz progress" id="progress-bar-container">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:24px;" id="question-area">
+        <!-- injected dynamically -->
+      </div>
+
+      <div class="quiz-nav" style="margin-top:24px;">
+        <div class="nav-left">
+          <button class="btn btn-ghost btn-sm" id="btn-back" onclick="goBack()" aria-label="Go to previous question">← Back</button>
+        </div>
+        <div class="nav-right">
+          <button class="btn btn-ghost btn-sm" id="btn-skip" onclick="skipQuestion()" aria-label="Skip this question">Skip</button>
+          <button class="btn btn-primary btn-sm" id="btn-next" onclick="goNext()" aria-label="Go to next question">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!--  SCREEN 3: RESULTS                            -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div id="screen-results" class="screen" role="main">
+    <div class="card results-header">
+      <div class="results-title">Your Alignment Results</div>
+      <div class="results-sub">Based on your responses, here's how your views compare to each party's 2025 platform.</div>
+    </div>
+
+    <div id="pref-callout" class="match-callout" role="alert"></div>
+
+    <div class="card">
+      <p class="section-heading">Overall Match</p>
+      <div class="party-results" id="overall-bars" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="card" style="display:flex;flex-direction:column;gap:10px;">
+      <p class="section-heading">Match by Policy Domain</p>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:4px;">Tap a domain to expand your alignment breakdown.</p>
+      <div id="domain-breakdown" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+
+    <div class="card" style="display:flex;flex-direction:column;gap:16px;">
+      <p class="section-heading">About the Parties</p>
+      <div id="party-summaries" style="display:flex;flex-direction:column;gap:12px;"></div>
+    </div>
+
+    <div class="card">
+      <p class="section-heading" style="margin-bottom:10px;">Share or Retake</p>
+      <div class="share-row">
+        <button class="btn btn-secondary" onclick="copyResults()" id="share-btn">Copy Results</button>
+        <button class="btn btn-secondary" onclick="retake()">Retake Quiz</button>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong> This quiz is for informational and educational purposes only. It is based on published party platforms from the 2025 federal election and may not capture every nuance of each party's positions. Party position scores reflect platform documents and published policy commitments as of the 2025 election cycle. We encourage you to read party platforms directly and consult multiple sources before voting.
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    Non-partisan · No data collected · Built for the 2025 Canadian federal election
+  </footer>
+
+</div>
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════════════
+   QUIZ DATA
+   Party positions: 1=Strongly Disagree, 3=Neutral, 5=Strongly Agree
+   Sources: 2025 party platforms, CBC/CTV platform comparisons
+═══════════════════════════════════════════════════════════════ */
+
+const PARTIES = {
+  LPC: { name: 'Liberal Party', leader: 'Mark Carney', color: '#D71920', short: 'LPC' },
+  CPC: { name: 'Conservative Party', leader: 'Pierre Poilievre', color: '#1A4782', short: 'CPC' },
+  NDP: { name: 'New Democratic Party', leader: 'Jagmeet Singh', color: '#E87722', short: 'NDP' }
+};
+
+const PARTY_SUMMARIES = {
+  LPC: `The Liberal Party of Canada, led into the 2025 election by Mark Carney, advocates for a mixed-economy approach: targeted tax measures, maintaining universal public healthcare, pharmacare implementation, and a continued carbon pricing mechanism. The Liberals support gradual energy transition while managing the oil and gas sector and have committed to reconciliation and UNDRIP implementation. Their platform emphasizes housing affordability through supply-side measures and maintaining Canada's international commitments.`,
+  CPC: `The Conservative Party of Canada, led by Pierre Poilievre, centres its 2025 platform on reducing taxes and government spending, eliminating the carbon tax, and approving more resource and pipeline projects. Conservatives favour a market-driven approach to housing, tighter immigration targets, and increasing defence spending to meet NATO commitments. Their platform prioritizes "axing the tax," building more homes through regulatory reform, and restoring fiscal balance through spending restraint.`,
+  NDP: `The New Democratic Party, led into the 2025 election by Jagmeet Singh, advocates for expanded public services including a universal pharmacare program, enhanced dental care, public housing construction, and a $20 federal minimum wage. The NDP supports wealth and corporate tax increases to fund social programs, aggressive climate action including fossil fuel subsidy elimination, and robust implementation of Indigenous rights under UNDRIP. Their platform centres economic justice, workers' rights, and expanding the social safety net.`
+};
+
+const DOMAIN_ICONS = {
+  'Economy & Taxation': '💰',
+  'Healthcare': '🏥',
+  'Climate & Environment': '🌿',
+  'Housing': '🏠',
+  'Immigration': '🌐',
+  'Indigenous Relations': '🤝',
+  'Defence & Foreign Policy': '🛡️',
+  'Social Programs & Safety Net': '🤲',
+  'Energy & Natural Resources': '⚡',
+  'Public Safety & Justice': '⚖️'
+};
+
+// Questions: reverse_scored means the agreement direction is flipped in wording
+// so we flip the user's answer before computing alignment (handled in scoring)
+const QUESTIONS_MASTER = [
+  // ── Economy & Taxation ──
+  {
+    id: 'econ_01',
+    domain: 'Economy & Taxation',
+    statement: 'The federal government should reduce income taxes, even if it requires reducing some public services.',
+    reverse_scored: false,
+    party_positions: { LPC: 3, CPC: 5, NDP: 1 }
+  },
+  {
+    id: 'econ_02',
+    domain: 'Economy & Taxation',
+    statement: 'Corporate tax rates should be increased to fund expanded social programs.',
+    reverse_scored: false,
+    party_positions: { LPC: 2, CPC: 1, NDP: 5 }
+  },
+  {
+    id: 'econ_03',
+    domain: 'Economy & Taxation',
+    statement: 'Running a federal budget deficit is unacceptable regardless of economic circumstances.',
+    reverse_scored: true, // reverse: agreeing here = anti-deficit, CPC agrees
+    party_positions: { LPC: 2, CPC: 4, NDP: 2 }
+  },
+
+  // ── Healthcare ──
+  {
+    id: 'health_01',
+    domain: 'Healthcare',
+    statement: 'The federal government should implement a universal pharmacare program covering prescription drugs for all Canadians.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 2, NDP: 5 }
+  },
+  {
+    id: 'health_02',
+    domain: 'Healthcare',
+    statement: 'Private healthcare providers should play a greater role in delivering publicly-funded medical services.',
+    reverse_scored: false,
+    party_positions: { LPC: 2, CPC: 4, NDP: 1 }
+  },
+  {
+    id: 'health_03',
+    domain: 'Healthcare',
+    statement: 'The federal dental care program should be expanded to cover all Canadians, not just those with lower incomes.',
+    reverse_scored: false,
+    party_positions: { LPC: 3, CPC: 2, NDP: 5 }
+  },
+
+  // ── Climate & Environment ──
+  {
+    id: 'climate_01',
+    domain: 'Climate & Environment',
+    statement: 'A price on carbon emissions is an effective and fair way to reduce greenhouse gas emissions.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 1, NDP: 4 }
+  },
+  {
+    id: 'climate_02',
+    domain: 'Climate & Environment',
+    statement: 'Canada should eliminate all federal subsidies to the fossil fuel industry.',
+    reverse_scored: false,
+    party_positions: { LPC: 3, CPC: 1, NDP: 5 }
+  },
+  {
+    id: 'climate_03',
+    domain: 'Climate & Environment',
+    statement: 'The federal government should set legally-binding deadlines for achieving net-zero emissions.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 2, NDP: 5 }
+  },
+
+  // ── Housing ──
+  {
+    id: 'housing_01',
+    domain: 'Housing',
+    statement: 'The federal government should directly fund the construction of public and non-profit housing.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 2, NDP: 5 }
+  },
+  {
+    id: 'housing_02',
+    domain: 'Housing',
+    statement: 'Zoning rules and municipal regulations are a primary barrier to housing affordability and should be reformed by the federal government.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 5, NDP: 3 }
+  },
+  {
+    id: 'housing_03',
+    domain: 'Housing',
+    statement: 'Restrictions on foreign buyers purchasing Canadian residential real estate should remain in place.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 3, NDP: 5 }
+  },
+
+  // ── Immigration ──
+  {
+    id: 'immig_01',
+    domain: 'Immigration',
+    statement: 'Canada\'s annual immigration levels should be reduced from recent targets.',
+    reverse_scored: false,
+    party_positions: { LPC: 3, CPC: 4, NDP: 2 }
+  },
+  {
+    id: 'immig_02',
+    domain: 'Immigration',
+    statement: 'It should be easier for temporary foreign workers and international students to obtain permanent residency.',
+    reverse_scored: false,
+    party_positions: { LPC: 3, CPC: 2, NDP: 4 }
+  },
+
+  // ── Indigenous Relations ──
+  {
+    id: 'indigenous_01',
+    domain: 'Indigenous Relations',
+    statement: 'Full implementation of the UN Declaration on the Rights of Indigenous Peoples (UNDRIP) should be a top federal government priority.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 2, NDP: 5 }
+  },
+  {
+    id: 'indigenous_02',
+    domain: 'Indigenous Relations',
+    statement: 'Resource development projects on or near Indigenous lands should require the free, prior, and informed consent of affected Indigenous communities.',
+    reverse_scored: false,
+    party_positions: { LPC: 3, CPC: 2, NDP: 5 }
+  },
+
+  // ── Defence & Foreign Policy ──
+  {
+    id: 'defence_01',
+    domain: 'Defence & Foreign Policy',
+    statement: 'Canada should increase defence spending to meet NATO\'s 2% of GDP target.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 5, NDP: 2 }
+  },
+  {
+    id: 'defence_02',
+    domain: 'Defence & Foreign Policy',
+    statement: 'Canada should take stronger steps to assert its economic and political sovereignty from the United States.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 2, NDP: 4 }
+  },
+  {
+    id: 'defence_03',
+    domain: 'Defence & Foreign Policy',
+    statement: 'Canada should maintain or increase its foreign aid and international development commitments.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 2, NDP: 5 }
+  },
+
+  // ── Social Programs ──
+  {
+    id: 'social_01',
+    domain: 'Social Programs & Safety Net',
+    statement: 'The federal government should introduce a guaranteed basic income for all Canadians.',
+    reverse_scored: false,
+    party_positions: { LPC: 2, CPC: 1, NDP: 4 }
+  },
+  {
+    id: 'social_02',
+    domain: 'Social Programs & Safety Net',
+    statement: 'Affordable, publicly-funded childcare should be universally available across Canada.',
+    reverse_scored: false,
+    party_positions: { LPC: 5, CPC: 2, NDP: 5 }
+  },
+
+  // ── Energy & Natural Resources ──
+  {
+    id: 'energy_01',
+    domain: 'Energy & Natural Resources',
+    statement: 'Canada should accelerate the phase-out of oil and gas production, even if it causes disruption to that sector.',
+    reverse_scored: false,
+    party_positions: { LPC: 2, CPC: 1, NDP: 4 }
+  },
+  {
+    id: 'energy_02',
+    domain: 'Energy & Natural Resources',
+    statement: 'New oil and gas export pipelines should be approved if they pass environmental assessment processes.',
+    reverse_scored: false,
+    party_positions: { LPC: 3, CPC: 5, NDP: 1 }
+  },
+  {
+    id: 'energy_03',
+    domain: 'Energy & Natural Resources',
+    statement: 'Canada should invest in new nuclear energy capacity as part of its clean energy strategy.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 4, NDP: 2 }
+  },
+
+  // ── Public Safety & Justice ──
+  {
+    id: 'justice_01',
+    domain: 'Public Safety & Justice',
+    statement: 'Federal gun control legislation in Canada should be strengthened.',
+    reverse_scored: false,
+    party_positions: { LPC: 4, CPC: 2, NDP: 4 }
+  },
+  {
+    id: 'justice_02',
+    domain: 'Public Safety & Justice',
+    statement: 'Possession of small amounts of illegal drugs for personal use should be decriminalized rather than prosecuted as a criminal offence.',
+    reverse_scored: false,
+    party_positions: { LPC: 3, CPC: 1, NDP: 5 }
+  }
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   APP STATE
+═══════════════════════════════════════════════════════════════ */
+let state = {
+  mode: 'one',          // 'one' | 'group'
+  currentIndex: 0,
+  questions: [],        // shuffled order
+  answers: {},          // { id: { value: 1-5|null, importance: 'low'|'medium'|'high' } }
+  statedPref: '',
+  results: null
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════════════════════ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setMode(m) {
+  state.mode = m;
+  document.getElementById('mode-one').classList.toggle('active', m === 'one');
+  document.getElementById('mode-group').classList.toggle('active', m === 'group');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   QUIZ FLOW
+═══════════════════════════════════════════════════════════════ */
+function startQuiz() {
+  state.statedPref = document.getElementById('current-pref').value;
+  state.currentIndex = 0;
+  state.answers = {};
+  state.results = null;
+
+  // Shuffle questions; ensure ~30% are "reverse framed" for acquiescence bias
+  // (reverse_scored is baked in to the data for the specific questions flagged)
+  state.questions = shuffle(QUESTIONS_MASTER);
+
+  // Init answers with defaults
+  state.questions.forEach(q => {
+    state.answers[q.id] = { value: null, importance: 'medium' };
+  });
+
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = state.questions[state.currentIndex];
+  const total = state.questions.length;
+  const idx = state.currentIndex;
+  const ans = state.answers[q.id];
+
+  // Progress
+  const pct = Math.round((idx / total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-fill').setAttribute('aria-valuenow', pct);
+  document.getElementById('q-domain-label').textContent = q.domain;
+  document.getElementById('q-count-label').textContent = `${idx + 1} of ${total}`;
+  document.getElementById('progress-bar-container').setAttribute('aria-valuemin', 0);
+  document.getElementById('progress-bar-container').setAttribute('aria-valuemax', 100);
+  document.getElementById('progress-bar-container').setAttribute('aria-valuenow', pct);
+
+  // Back button
+  document.getElementById('btn-back').style.visibility = idx === 0 ? 'hidden' : 'visible';
+
+  // Last question → change "Next" to "See Results"
+  const isLast = idx === total - 1;
+  document.getElementById('btn-next').textContent = isLast ? 'See Results →' : 'Next →';
+  document.getElementById('btn-skip').style.display = isLast ? 'none' : 'inline-flex';
+
+  const likertLabels = [
+    'Strongly<br>Disagree',
+    'Disagree',
+    'Neutral /<br>No Opinion',
+    'Agree',
+    'Strongly<br>Agree'
+  ];
+
+  let html = `
+    <div class="domain-badge">${DOMAIN_ICONS[q.domain] || ''} ${q.domain}</div>
+    <p class="question-statement" id="q-statement">${q.statement}</p>
+    ${q.reverse_scored ? '<p class="reverse-note">↕ Note: disagreement with this statement may reflect a progressive stance on this topic.</p>' : ''}
+    <fieldset style="border:none;" aria-labelledby="q-statement">
+      <legend class="sr-only">Select your response</legend>
+      <div class="likert-grid" role="radiogroup">
+  `;
+
+  for (let i = 1; i <= 5; i++) {
+    const selected = ans.value === i;
+    html += `
+      <label class="likert-option${selected ? ' selected' : ''}" aria-label="${likertLabels[i-1].replace('<br>', ' ')}">
+        <input type="radio" name="q_${q.id}" value="${i}"
+          ${selected ? 'checked' : ''}
+          onchange="selectAnswer(${i})"
+          aria-checked="${selected}">
+        <span class="circle" aria-hidden="true"></span>
+        <span class="likert-label">${likertLabels[i-1]}</span>
+      </label>
+    `;
+  }
+
+  html += `</div></fieldset>
+
+    <div class="importance-row">
+      <span class="importance-label">How important is this topic to you?</span>
+      <div class="imp-opts" role="group" aria-label="Topic importance">
+        ${['low','medium','high'].map(level =>
+          `<button class="imp-btn${ans.importance === level ? ' active' : ''}"
+            onclick="setImportance('${level}')"
+            aria-pressed="${ans.importance === level}">${level.charAt(0).toUpperCase() + level.slice(1)}</button>`
+        ).join('')}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('question-area').innerHTML = html;
+}
+
+function selectAnswer(val) {
+  const q = state.questions[state.currentIndex];
+  state.answers[q.id].value = val;
+
+  // Update UI without full re-render
+  document.querySelectorAll('.likert-option').forEach((el, i) => {
+    const isSelected = (i + 1) === val;
+    el.classList.toggle('selected', isSelected);
+    el.querySelector('input').setAttribute('aria-checked', isSelected);
+  });
+}
+
+function setImportance(level) {
+  const q = state.questions[state.currentIndex];
+  state.answers[q.id].importance = level;
+  document.querySelectorAll('.imp-btn').forEach(btn => {
+    const active = btn.textContent.toLowerCase() === level;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', active);
+  });
+}
+
+function goNext() {
+  // If no answer, treat as neutral (null stays null → scored at 0.5 weight per spec)
+  const total = state.questions.length;
+  if (state.currentIndex < total - 1) {
+    state.currentIndex++;
+    renderQuestion();
+  } else {
+    computeAndShowResults();
+  }
+}
+
+function goBack() {
+  if (state.currentIndex > 0) {
+    state.currentIndex--;
+    renderQuestion();
+  }
+}
+
+function skipQuestion() {
+  const q = state.questions[state.currentIndex];
+  state.answers[q.id].value = null; // null = neutral/skipped
+  goNext();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCORING
+═══════════════════════════════════════════════════════════════ */
+const IMPORTANCE_WEIGHTS = { low: 0.5, medium: 1.0, high: 2.0 };
+
+function computeAndShowResults() {
+  const domains = [...new Set(QUESTIONS_MASTER.map(q => q.domain))];
+  const partyIds = ['LPC', 'CPC', 'NDP'];
+
+  // Per-question alignment
+  const domainScores = {}; // { domain: { LPC: [...], CPC: [...], NDP: [...] } }
+  const overall = { LPC: { sum: 0, weight: 0 }, CPC: { sum: 0, weight: 0 }, NDP: { sum: 0, weight: 0 } };
+
+  domains.forEach(d => { domainScores[d] = { LPC: [], CPC: [], NDP: [] }; });
+
+  state.questions.forEach(q => {
+    const ans = state.answers[q.id];
+    const importance = IMPORTANCE_WEIGHTS[ans.importance] || 1.0;
+
+    let userVal = ans.value; // 1-5 or null
+
+    // Null (skipped) → weight it at 0.5 per spec, treat as neutral (3)
+    const weight = userVal === null ? importance * 0.5 : importance;
+    const effectiveVal = userVal === null ? 3 : userVal;
+
+    // If reverse_scored, flip the user's answer for scoring
+    // (The question is worded inversely, so agreeing = disagreeing with the progressive direction)
+    const scoredVal = q.reverse_scored ? (6 - effectiveVal) : effectiveVal;
+
+    partyIds.forEach(pid => {
+      const partyPos = q.party_positions[pid];
+      // alignment = 1 - (|user - party| / 4), range 0–1
+      const alignment = 1 - (Math.abs(scoredVal - partyPos) / 4);
+      domainScores[q.domain][pid].push({ alignment, weight });
+      overall[pid].sum += alignment * weight;
+      overall[pid].weight += weight;
+    });
+  });
+
+  // Aggregate
+  const overallPct = {};
+  partyIds.forEach(pid => {
+    overallPct[pid] = overall[pid].weight > 0
+      ? Math.round((overall[pid].sum / overall[pid].weight) * 100)
+      : 0;
+  });
+
+  const domainPct = {};
+  domains.forEach(d => {
+    domainPct[d] = {};
+    partyIds.forEach(pid => {
+      const items = domainScores[d][pid];
+      if (!items.length) { domainPct[d][pid] = 0; return; }
+      const sumW = items.reduce((a, x) => a + x.weight, 0);
+      const sumA = items.reduce((a, x) => a + x.alignment * x.weight, 0);
+      domainPct[d][pid] = sumW > 0 ? Math.round((sumA / sumW) * 100) : 0;
+    });
+  });
+
+  // Sort parties by overall match descending
+  const sortedParties = [...partyIds].sort((a, b) => overallPct[b] - overallPct[a]);
+
+  state.results = { overallPct, domainPct, sortedParties, domains };
+  renderResults();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESULTS RENDER
+═══════════════════════════════════════════════════════════════ */
+function renderResults() {
+  const { overallPct, domainPct, sortedParties, domains } = state.results;
+
+  // ── Pref callout ──
+  const callout = document.getElementById('pref-callout');
+  if (state.statedPref && state.statedPref !== sortedParties[0]) {
+    const pref = PARTIES[state.statedPref];
+    const top = PARTIES[sortedParties[0]];
+    callout.innerHTML = `You indicated you lean toward the <strong>${pref.name}</strong>. Your responses align most closely with the platform of the <strong>${top.name}</strong> at ${overallPct[sortedParties[0]]}%. Your alignment with the ${pref.name} is ${overallPct[state.statedPref]}%.`;
+    callout.classList.add('show');
+  } else if (state.statedPref && state.statedPref === sortedParties[0]) {
+    const pref = PARTIES[state.statedPref];
+    callout.innerHTML = `Your stated preference and your responses align — you lean toward the <strong>${pref.name}</strong>, and your highest match is also the ${pref.name} at ${overallPct[sortedParties[0]]}%.`;
+    callout.classList.add('show');
+  } else {
+    callout.classList.remove('show');
+  }
+
+  // ── Overall bars ──
+  const barsEl = document.getElementById('overall-bars');
+  barsEl.innerHTML = sortedParties.map(pid => {
+    const p = PARTIES[pid];
+    return `
+      <div class="party-bar-row">
+        <div class="party-bar-header">
+          <div class="party-name-chip">
+            <span class="party-dot" style="background:${p.color}"></span>
+            <span>${p.name}</span>
+          </div>
+          <span class="party-pct" style="color:${p.color}">${overallPct[pid]}%</span>
+        </div>
+        <div class="bar-track" role="progressbar" aria-label="${p.name} alignment" aria-valuenow="${overallPct[pid]}" aria-valuemin="0" aria-valuemax="100">
+          <div class="bar-fill" id="bar-${pid}" style="background:${p.color}" data-target="${overallPct[pid]}"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // ── Domain breakdown ──
+  const domEl = document.getElementById('domain-breakdown');
+  domEl.innerHTML = domains.map(domain => {
+    const pcts = domainPct[domain];
+    const sorted = [...Object.entries(pcts)].sort((a,b) => b[1]-a[1]);
+    const leader = PARTIES[sorted[0][0]];
+    const icon = DOMAIN_ICONS[domain] || '';
+
+    return `
+      <div class="domain-section" data-domain="${domain}">
+        <div class="domain-header" onclick="toggleDomain(this)" role="button" tabindex="0"
+          aria-expanded="false" aria-label="Expand ${domain} results">
+          <div>
+            <div class="domain-title">${icon} ${domain}</div>
+            <div class="domain-leader" style="color:${leader.color}">
+              Closest match: ${leader.name} (${sorted[0][1]}%)
+            </div>
+          </div>
+          <span class="domain-toggle" aria-hidden="true">⌄</span>
+        </div>
+        <div class="domain-body" role="region" aria-label="${domain} breakdown">
+          ${sorted.map(([pid, pct]) => {
+            const p = PARTIES[pid];
+            return `
+              <div class="mini-bar-row">
+                <span class="mini-bar-name">${p.name.replace('Party of Canada','').replace('New Democratic','NDP').replace(' Party','')}</span>
+                <div class="mini-bar-track">
+                  <div class="mini-bar-fill" style="background:${p.color}" data-target="${pct}"></div>
+                </div>
+                <span class="mini-bar-pct">${pct}%</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Domain keyboard support
+  domEl.querySelectorAll('.domain-header').forEach(h => {
+    h.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDomain(h); }
+    });
+  });
+
+  // ── Party summaries ──
+  const sumEl = document.getElementById('party-summaries');
+  sumEl.innerHTML = sortedParties.map(pid => {
+    const p = PARTIES[pid];
+    return `
+      <div class="party-summary-card" style="border-left-color:${p.color}">
+        <div class="party-summary-header">
+          <span class="party-dot" style="background:${p.color}"></span>
+          <span class="party-summary-name">${p.name}</span>
+          <span class="party-summary-leader">— ${p.leader}</span>
+        </div>
+        <p class="party-summary-text">${PARTY_SUMMARIES[pid]}</p>
+      </div>
+    `;
+  }).join('');
+
+  showScreen('screen-results');
+
+  // Animate bars after paint
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.querySelectorAll('.bar-fill[data-target]').forEach(el => {
+        el.style.width = el.dataset.target + '%';
+      });
+      document.querySelectorAll('.mini-bar-fill[data-target]').forEach(el => {
+        el.style.width = el.dataset.target + '%';
+      });
+    }, 120);
+  });
+}
+
+function toggleDomain(header) {
+  const section = header.closest('.domain-section');
+  const isOpen = section.classList.toggle('open');
+  header.setAttribute('aria-expanded', isOpen);
+
+  // Animate mini bars when opened
+  if (isOpen) {
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        section.querySelectorAll('.mini-bar-fill[data-target]').forEach(el => {
+          el.style.width = el.dataset.target + '%';
+        });
+      }, 50);
+    });
+  }
+}
+
+function retake() {
+  showScreen('screen-welcome');
+}
+
+function copyResults() {
+  if (!state.results) return;
+  const { overallPct, sortedParties } = state.results;
+  const lines = ['🍁 Canadian Political Alignment Quiz Results', ''];
+  sortedParties.forEach(pid => {
+    const p = PARTIES[pid];
+    lines.push(`${p.name}: ${overallPct[pid]}%`);
+  });
+  lines.push('');
+  lines.push('Take the quiz: ' + window.location.href);
+
+  const text = lines.join('\n');
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('share-btn');
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+    });
+  } else {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.getElementById('share-btn');
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  }
+}
+</script>
+</body>
+</html>
